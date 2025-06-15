@@ -5,12 +5,6 @@ const getContacts = (req, res) => {
     res.status(200).json({ message: "Get all contacts" });
 };
 
-// @desc Get single contact
-// @route GET /api/contacts/:id
-// @access public
-const getContact = (req, res) => {
-    res.status(200).json({ message: `Get contact for ${req.params.id}` });
-};
 
 // @desc Create new contact
 // @route POST /api/contacts
@@ -23,6 +17,13 @@ const createContact = (req, res) => {
         throw new Error("All fields are mandatory!");
     }
     res.status(201).json({ message: "Create Contact" });
+};
+
+// @desc Get single contact
+// @route GET /api/contacts/:id
+// @access public
+const getContact = (req, res) => {
+    res.status(200).json({ message: `Get contact for ${req.params.id}` });
 };
 
 // @desc Update contact
