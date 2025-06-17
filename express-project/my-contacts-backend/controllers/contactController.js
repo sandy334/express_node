@@ -41,10 +41,11 @@ const deleteContact = asyncHandler(async(req, res) => {
     res.status(200).json({ message: `Delete contact for ${req.params.id}` });
 });
 
-module.exports = {
+module.exports = { 
     getContacts,
     getContact,
     createContact,
     updateContact,
     deleteContact,
 };
+// Add other controller functions here as needed
