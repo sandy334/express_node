@@ -13,6 +13,9 @@ app.use(express.json());
 
 // Routes
 app.use("/api/contacts", require("./routes/contactRoutes"));
+// Error handling middleware
+app.use("/api/users", require("./routes/userRoutes")); // Example for user routes
+app.use(errorHandler);  
 
 // Start server
 app.listen(port, () => {
