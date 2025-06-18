@@ -22,16 +22,25 @@ const registerUser = asyncHandler(async (req, res) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
     console.log("Hashed Password:", hashedPassword);
-
-    // Create user (not saved in DB here, you can implement it later)
-    res.status(201).json({
-        message: 'User registered successfully',
-        user: {
-            username,
-            email,
-            password: hashedPassword, // only for demo purpose, don’t send password in real app
-        }
+    const user=await User.create({
+        username,
+        email,
+        password: hashedPassword,
     });
+    console.log("User Created:", $(user));
+    // Create user (not saved in DB here, you can implement it later)
+    if (user) {
+        res.status(201).json({
+            _id: user.id,
+            username: user.username,
+            email: user.email,
+        });
+        return;
+    } else {
+        res.status(400);
+        throw new Error('Invalid user data');
+    }
+    res.json({message: 'User registered successfully', });
 });
 
 // @desc    Login a user
