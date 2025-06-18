@@ -51,7 +51,7 @@ const loginUser = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) {
         res.status(400);
-        throw new Error('Please add all fields');
+        throw new Error('Please add the  fields');
     }
     res.json({ message: 'Login User' });
 });
