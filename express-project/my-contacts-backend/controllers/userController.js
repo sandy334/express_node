@@ -1,7 +1,8 @@
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcryptjs');
-const User = require('../models/userModel');
 const jwt = require('jsonwebtoken');
+const User = require('../models/userModel');
+
 // @desc    Register a user
 // @route   POST /api/users/register
 // @access  Public
@@ -19,29 +20,24 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new Error('User already exists');
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log("Hashed Password:", hashedPassword);
-    const user=await User.create({
+
+    const user = await User.create({
         username,
         email,
         password: hashedPassword,
     });
-   console.log("User Created:", user);
 
-    // Create user (not saved in DB here, you can implement it later)
     if (user) {
         res.status(201).json({
             _id: user.id,
             username: user.username,
             email: user.email,
         });
-        return;
     } else {
         res.status(400);
         throw new Error('Invalid user data');
     }
-    res.json({message: 'User registered successfully', });
 });
 
 // @desc    Login a user
@@ -49,14 +45,16 @@ const registerUser = asyncHandler(async (req, res) => {
 // @access  Public
 const loginUser = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
+
     if (!email || !password) {
         res.status(400);
-        throw new Error('Please add the  fields');
+        throw new Error('Please add all fields');
     }
-    // Check if user exists
+
     const user = await User.findOne({ email });
+
     if (user && (await bcrypt.compare(password, user.password))) {
-        const accessTokken = jwt.sign(
+        const accessToken = jwt.sign(
             {
                 user: {
                     username: user.username,
@@ -65,13 +63,11 @@ const loginUser = asyncHandler(async (req, res) => {
                 },
             },
             process.env.ACCESS_TOKEN_SECRET,
-            {
-                expiresIn: '1m',
-            }
+            { expiresIn: '15m' }
         );
-        // Generate JWT token               
-        res.status(200).json({accessTokken})
-    }else {
+
+        res.status(200).json({ accessToken });
+    } else {
         res.status(401);
         throw new Error('Invalid credentials');
     }
@@ -87,5 +83,5 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 module.exports = {
     registerUser,
     loginUser,
-    getCurrentUser
+    getCurrentUser,
 };
