@@ -67,7 +67,7 @@ const deleteContact = asyncHandler(async (req, res) => {
   await Contact.deleteOne({ _id: req.params.id });
   res.status(200).json({ message: `Deleted contact with id ${req.params.id}` });
 });
-
+//all updated crud operations are working fine
 module.exports = {
   getContacts,
   createContact,
