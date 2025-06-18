@@ -53,6 +53,8 @@ const loginUser = asyncHandler(async (req, res) => {
         res.status(400);
         throw new Error('Please add the  fields');
     }
+    // Check if user exists
+    const user = await User.findOne({ email });
     res.json({ message: 'Login User' });
 });
 
