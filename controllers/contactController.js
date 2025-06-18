@@ -1,45 +1,24 @@
 const asyncHandler = require('express-async-handler');
 const Contact = require('../models/contactModel');
-//@desc Get all contacts
-//@route GET /api/contacts
-//@access Public
-const getContacts = (req, res) => {
-    const contacts =await Contact.find(); // Assuming you have a Contact model
-    res.status(200).json(contacts);
-};
 
-//@desc Create new contact
-//@route POST /api/contacts
-//@access Public
-const createContact = (req, res) => {
-    res.status(201).json({ message: 'Create contact' });
-};
+// @desc    Create new contact
+// @route   POST /api/contacts
+// @access  Public
+const createContact = asyncHandler(async (req, res) => {
+    const { name, email, phone } = req.body;
 
-//@desc Get contact
-//@route GET /api/contacts/:id
-//@access Public
-const getContact = (req, res) => {
-    res.status(200).json({ message: `Get contact for ${req.params.id}` });
-};
+    if (!name || !email || !phone) {
+        res.status(400);
+        throw new Error("All fields are mandatory");
+    }
 
-//@desc Update contact
-//@route PUT /api/contacts/:id
-//@access Public
-const updateContact = (req, res) => {
-    res.status(200).json({ message: `Update contact for ${req.params.id}` });
-};
+    // ✅ Create and save contact in MongoDB
+    const contact = await Contact.create({
+        name,
+        email,
+        phone
+    });
 
-//@desc Delete contact
-//@route DELETE /api/contacts/:id
-//@access Public
-const deleteContact = (req, res) => {
-    res.status(200).json({ message: `Delete contact for ${req.params.id}` });
-};
-
-module.exports = {
-    getContacts,
-    createContact,
-    getContact,
-    updateContact,
-    deleteContact
-};
+    // ✅ Respond with the created document
+    res.status(201).json(contact);
+});
