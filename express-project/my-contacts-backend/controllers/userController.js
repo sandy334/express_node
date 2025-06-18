@@ -55,6 +55,10 @@ const loginUser = asyncHandler(async (req, res) => {
     }
     // Check if user exists
     const user = await User.findOne({ email });
+    if (!user) {
+        res.status(400);
+        throw new Error('User not found');
+    }
     res.json({ message: 'Login User' });
 });
 
