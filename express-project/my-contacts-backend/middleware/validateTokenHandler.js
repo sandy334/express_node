@@ -4,23 +4,21 @@ const jwt = require('jsonwebtoken');
 const validateToken = asyncHandler(async (req, res, next) => {
     let token;
 
-    if (
-        req.headers.authorization &&
-        req.headers.authorization.startsWith('Bearer')
-    ) {
-        try {
-            token = req.headers.authorization.split(' ')[1];
+    const authHeader = req.headers.authorization;
 
-            const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET); // ✅ Use correct secret env name
+    if (authHeader && authHeader.startsWith('Bearer')) {
+        try {
+            token = authHeader.split(' ')[1];
+            const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
             req.user = decoded.user;
-            next(); // ✅ proceed to next middleware/route handler
-        } catch (error) {
+            next();
+        } catch (err) {
             res.status(401);
             throw new Error('Token is not valid');
         }
     } else {
         res.status(401);
-        throw new Error('Not authorized, token missing');
+        throw new Error('No token provided');
     }
 });
 
