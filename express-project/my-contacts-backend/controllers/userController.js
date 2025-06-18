@@ -64,15 +64,17 @@ const loginUser = asyncHandler(async (req, res) => {
                     id: user.id,
                 },
             },
-            process.env.JWT_SECRET,
+            process.env.ACCESS_TOKEN_SECRET,
             {
-                expiresIn: '30d',
+                expiresIn: '1m',
             }
         );
         // Generate JWT token               
         res.status(200).json({accessTokken})
+    }else {
+        res.status(401);
+        throw new Error('Invalid credentials');
     }
-    res.json({ message: 'Login User' });
 });
 
 // @desc    Get current user
